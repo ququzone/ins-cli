@@ -1,0 +1,14 @@
+[package]
+name = "ins-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.3.3", features = ["derive", "env", "unicode", "wrap_help"] }
+ethers = { version = "2.0.7", features = ["legacy"] }
+eyre = "0.6.8"
+foundry-cli = { git = "https://github.com/foundry-rs/foundry.git", version = "0.2.0" }
+hex = "0.4.3"
+serde = { version = "1.0.164", features = ["derive"] }
+thiserror = "1.0.40"
+tokio = { version = "1.28.2", features = ["macros"] }
