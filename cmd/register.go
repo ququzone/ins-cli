@@ -48,5 +48,5 @@ func init() {
 	viper.BindPFlag("private-key", registerCmd.Flags().Lookup("private-key"))
 	viper.BindPFlag("controller", registerCmd.Flags().Lookup("controller"))
 	viper.BindPFlag("resolver", registerCmd.Flags().Lookup("resolver"))
-	viper.BindPFlag("owner", registerCmd.Flags().Lookup("resolver"))
+	viper.BindPFlag("owner", registerCmd.Flags().Lookup("owner"))
 }
