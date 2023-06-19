@@ -57,7 +57,7 @@ func nameHash(name string) (hash [32]byte, err error) {
 	return
 }
 
-func Register(rpc, controllerAddr, resolverAddr, privateKey, name string) error {
+func Register(rpc, controllerAddr, resolverAddr, privateKey, owner, name string) error {
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
 		return err
@@ -74,7 +74,10 @@ func Register(rpc, controllerAddr, resolverAddr, privateKey, name string) error 
 	if err != nil {
 		return err
 	}
-	keyAddr := crypto.PubkeyToAddress(key.PublicKey)
+	ownerAddr := crypto.PubkeyToAddress(key.PublicKey)
+	if owner != "" {
+		ownerAddr = common.HexToAddress(owner)
+	}
 
 	transactor, err := bind.NewKeyedTransactorWithChainID(key, chainId)
 	if err != nil {
@@ -93,7 +96,7 @@ func Register(rpc, controllerAddr, resolverAddr, privateKey, name string) error 
 	if err != nil {
 		return err
 	}
-	data, err := resolverABI.Pack("setAddr0", hash, keyAddr)
+	data, err := resolverABI.Pack("setAddr0", hash, ownerAddr)
 	if err != nil {
 		fmt.Println(data)
 		return err
@@ -102,7 +105,7 @@ func Register(rpc, controllerAddr, resolverAddr, privateKey, name string) error 
 	commitment, err := controller.MakeCommitment(
 		nil,
 		name,
-		keyAddr,
+		ownerAddr,
 		duration,
 		secret,
 		common.HexToAddress(resolverAddr),
@@ -137,7 +140,7 @@ func Register(rpc, controllerAddr, resolverAddr, privateKey, name string) error 
 	transactor.Value = new(big.Int).Add(price.Base, price.Premium)
 	tx, err = controller.Register(transactor,
 		name,
-		keyAddr,
+		ownerAddr,
 		duration,
 		secret,
 		common.HexToAddress(resolverAddr),
