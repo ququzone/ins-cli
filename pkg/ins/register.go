@@ -92,13 +92,31 @@ func Register(rpc, controllerAddr, resolverAddr, privateKey, owner, name string)
 	if err != nil {
 		return err
 	}
-	resolverABI, err := abi.JSON(strings.NewReader(contracts.PublicResolverABI))
+	resolverABI, err := abi.JSON(strings.NewReader(`[
+		{
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "node",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "a",
+          "type": "address"
+        }
+      ],
+      "name": "setAddr",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+	]`))
 	if err != nil {
 		return err
 	}
-	data, err := resolverABI.Pack("setAddr0", hash, ownerAddr)
+	data, err := resolverABI.Pack("setAddr", hash, ownerAddr)
 	if err != nil {
-		fmt.Println(data)
 		return err
 	}
 
